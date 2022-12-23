@@ -17,7 +17,7 @@ const Card: FC<cardProps> = (props) => {
         <h4>
           <b>{props.missionName}</b>
         </h4>
-        <p>{props.launchDate}</p>
+        <p>{new Date(props.launchDate).toLocaleDateString("en-US")}</p>
       </div>
     </div>
   );
