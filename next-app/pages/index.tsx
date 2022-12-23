@@ -1,4 +1,4 @@
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import type { GetStaticProps, NextPage } from "next";
 import HomePageHead from "../components/head/homePageHead";
 import { initializeApollo } from "../lib/apolloClient";
@@ -31,10 +31,6 @@ const Home: NextPage = () => {
   if (error) return <>{"An error occured fetching data"}</>;
   if (loading) return <>{"Loading"}</>;
 
-  const hideModal = (): void => {
-    setSelectedLaunchId("");
-  };
-
   return (
     <div className={styles.container}>
       <HomePageHead />
@@ -51,7 +47,7 @@ const Home: NextPage = () => {
                 image={
                   launch.links.flickr_images[0] ||
                   launch.links.mission_patch ||
-                  ""
+                  "https://upload.wikimedia.org/wikipedia/commons/d/d1/Falcon_Heavy_Demo_Mission_%2839337245145%29.jpg"
                 }
               />
             </div>
@@ -59,7 +55,11 @@ const Home: NextPage = () => {
         })}
       </div>
       {selectedLaunchId && (
-        <Modal launchId={selectedLaunchId} hide={hideModal} />
+        <Modal
+          launchId={selectedLaunchId}
+          setSelectedLaunchId={setSelectedLaunchId}
+          launchIds={data.launchesPast.map((launch: any) => launch.id)}
+        />
       )}
     </div>
   );

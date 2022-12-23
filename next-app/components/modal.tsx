@@ -23,16 +23,33 @@ const GET_LAUNCH_INFO = gql`
 
 type cardProps = {
   launchId: string;
-  hide: () => void;
+  setSelectedLaunchId: (id: string) => void;
+  launchIds: string[];
 };
 
-const Modal: FC<cardProps> = (props) => {
+const Modal: FC<cardProps> = ({ launchId, setSelectedLaunchId, launchIds }) => {
   const [getLaunchInfos, { loading, error, data }] =
     useLazyQuery(GET_LAUNCH_INFO);
 
   useEffect((): void => {
-    getLaunchInfos({ variables: { launchId: props.launchId } });
-  }, [props.launchId]);
+    getLaunchInfos({ variables: { launchId: launchId } });
+  }, [launchId]);
+
+  const hideModal = (): void => {
+    setSelectedLaunchId("");
+  };
+
+  const switchLaunchId = (way: string): void => {
+    let newLaunchId: string | null = null;
+
+    if (way === "next") {
+      newLaunchId = launchIds[launchIds.indexOf(launchId) + 1];
+    }
+    if (way === "prev") {
+      newLaunchId = launchIds[launchIds.indexOf(launchId) - 1];
+    }
+    if (newLaunchId !== null) setSelectedLaunchId(newLaunchId);
+  };
 
   if (error) return <>{"An error occured fetching data"}</>;
   if (loading) return <>{"Loading"}</>;
@@ -40,7 +57,7 @@ const Modal: FC<cardProps> = (props) => {
   return data
     ? createPortal(
         <>
-          <div className={styles.overlay} onClick={props.hide}>
+          <div className={styles.overlay} onClick={hideModal}>
             <div className={styles.wrapper}>
               <div
                 className={styles.modal}
@@ -52,7 +69,7 @@ const Modal: FC<cardProps> = (props) => {
                     src={
                       data.launch.links.flickr_images[0] ||
                       data.launch.links.mission_patch ||
-                      ""
+                      "https://upload.wikimedia.org/wikipedia/commons/d/d1/Falcon_Heavy_Demo_Mission_%2839337245145%29.jpg"
                     }
                     alt="rocket launch"
                   />
@@ -74,10 +91,31 @@ const Modal: FC<cardProps> = (props) => {
                   <button
                     type="button"
                     className={styles.closeButton}
-                    onClick={props.hide}
+                    onClick={hideModal}
                   >
                     <span>&times;</span>
                   </button>
+
+                  {launchIds[0] !== launchId && (
+                    <button
+                      type="button"
+                      className={styles.prevButton}
+                      onClick={() => switchLaunchId("prev")}
+                    >
+                      <span className={`${styles.arrow} ${styles.left}`}></span>
+                    </button>
+                  )}
+                  {launchIds[-1] !== launchId && (
+                    <button
+                      type="button"
+                      className={styles.nextButton}
+                      onClick={() => switchLaunchId("next")}
+                    >
+                      <span
+                        className={`${styles.arrow} ${styles.right}`}
+                      ></span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

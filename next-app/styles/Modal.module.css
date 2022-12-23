@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 2;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .wrapper {
@@ -63,4 +63,43 @@
   cursor: pointer;
   border: none;
   background: transparent;
+}
+
+.prevButton {
+  position: absolute;
+  top: 50%;
+  left: -10%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: none;
+  cursor: pointer;
+}
+
+.nextButton {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: none;
+  cursor: pointer;
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
 }
